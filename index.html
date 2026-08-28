@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Misi Desainer Motif Dayak Muda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest-900:#0B2E2A;
+  --forest-800:#123B34;
+  --forest-700:#1B4D42;
+  --forest-600:#256656;
+  --leaf-500:#3E8E6E;
+  --leaf-300:#8FC79B;
+  --clay-600:#A63D2F;
+  --clay-500:#C1502F;
+  --gold-500:#D9A441;
+  --gold-300:#EFCB7E;
+  --parchment:#F3E7C9;
+  --parchment-dark:#E7D6A6;
+  --ink:#241A10;
+  --river-500:#3A7EA0;
+  --red-heart:#D14545;
+  --white:#FFFBF0;
+  --radius-card:18px;
+  --shadow-soft:0 6px 0 rgba(0,0,0,0.18);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.06), transparent 55%),
+    linear-gradient(180deg,var(--forest-900) 0%,var(--forest-800) 45%,var(--forest-700) 100%);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+h1,h2,h3,.display{font-family:'Baloo 2',sans-serif;}
+button{font-family:'Nunito',sans-serif;cursor:pointer;}
+::selection{background:var(--gold-500);color:var(--ink);}
+
+#gameRoot{max-width:900px;margin:0 auto;padding:12px 14px 60px;position:relative;}
+
+.motif-border{
+  border:3px solid var(--gold-500);
+  border-image: repeating-linear-gradient(90deg, var(--gold-500) 0 18px, var(--leaf-300) 18px 22px, var(--gold-500) 22px 40px) 6;
+}
+
+.topbar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:rgba(11,46,42,0.85);
+  border:2px solid var(--gold-500);
+  border-radius:16px;
+  padding:8px 12px;
+  margin-bottom:14px;
+  position:sticky;top:8px;z-index:50;
+  backdrop-filter:blur(4px);
+}
+.chip{
+  display:flex;align-items:center;gap:5px;
+  background:var(--forest-700);
+  border:1.5px solid var(--gold-300);
+  border-radius:20px;
+  padding:5px 10px;
+  font-weight:800;
+  font-size:14px;
+  white-space:nowrap;
+}
+.chip.small{font-size:12px;padding:4px 8px;}
+.topbar .spacer{flex:1;}
+.iconbtn{
+  background:var(--forest-700);
+  border:1.5px solid var(--gold-300);
+  color:var(--white);
+  border-radius:12px;
+  width:36px;height:36px;
+  font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.iconbtn:active{transform:scale(0.92);}
+
+.card{
+  background:var(--parchment);
+  color:var(--ink);
+  border-radius:var(--radius-card);
+  padding:20px;
+  box-shadow:var(--shadow-soft);
+  border:3px solid var(--parchment-dark);
+  margin-bottom:16px;
+  position:relative;
+}
+.card.dark{background:var(--forest-700);color:var(--white);border-color:var(--forest-600);}
+
+.btn{
+  border:none;
+  border-radius:14px;
+  padding:14px 22px;
+  font-weight:800;
+  font-size:16px;
+  font-family:'Baloo 2',sans-serif;
+  color:var(--white);
+  background:var(--leaf-500);
+  box-shadow:0 5px 0 #2A6650;
+  transition:transform .08s;
+  min-height:48px;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #2A6650;}
+.btn.gold{background:var(--gold-500);color:var(--ink);box-shadow:0 5px 0 #A9780F;}
+.btn.gold:active{box-shadow:0 2px 0 #A9780F;}
+.btn.clay{background:var(--clay-600);box-shadow:0 5px 0 #6E241A;}
+.btn.clay:active{box-shadow:0 2px 0 #6E241A;}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink);box-shadow:none;}
+.btn:disabled{opacity:.5;cursor:default;}
+.btn.wide{width:100%;}
+
+.npc{
+  display:flex;gap:14px;align-items:flex-start;margin-bottom:10px;
+}
+.npc .avatar{
+  font-size:46px;flex-shrink:0;
+  background:var(--forest-700);
+  border-radius:50%;width:64px;height:64px;
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid var(--gold-500);
+  color:var(--white);
+}
+.npc .bubble{
+  background:var(--white);
+  border:2px solid var(--parchment-dark);
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:16px;
+  line-height:1.5;
+  flex:1;
+  position:relative;
+  animation:pop .25s ease;
+}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.npc .bubble b{color:var(--clay-600);}
+
+.grid{display:grid;gap:10px;}
+.grid.cols2{grid-template-columns:repeat(2,1fr);}
+.grid.cols3{grid-template-columns:repeat(3,1fr);}
+.grid.cols4{grid-template-columns:repeat(4,1fr);}
+@media (max-width:520px){
+  .grid.cols3{grid-template-columns:repeat(2,1fr);}
+  .grid.cols4{grid-template-columns:repeat(2,1fr);}
+}
+
+.tile{
+  background:var(--white);
+  border:2.5px solid var(--parchment-dark);
+  border-radius:14px;
+  padding:14px 8px;
+  text-align:center;
+  font-weight:700;
+  font-size:28px;
+  transition:transform .12s,border-color .12s;
+  min-height:80px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;
+}
+.tile .lbl{font-size:12px;font-family:'Nunito';font-weight:800;color:var(--ink);}
+.tile:active{transform:scale(0.95);}
+.tile.selected{border-color:var(--leaf-500);background:#E4F3E9;}
+.tile.correct{border-color:#2E8B4D;background:#DCF3E2;animation:bounce .4s;}
+.tile.wrong{border-color:var(--clay-600);background:#F8DCD4;animation:shake .4s;}
+.tile.locked{opacity:.4;pointer-events:none;}
+@keyframes bounce{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.opt{
+  display:block;width:100%;text-align:left;
+  background:var(--white);
+  border:2.5px solid var(--parchment-dark);
+  border-radius:12px;
+  padding:12px 14px;
+  margin-bottom:9px;
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink);
+}
+.opt:active{transform:scale(0.98);}
+.opt.selected{border-color:var(--leaf-500);background:#E4F3E9;}
+.opt.correct{border-color:#2E8B4D;background:#DCF3E2;}
+.opt.wrong{border-color:var(--clay-600);background:#F8DCD4;}
+
+.feedback{
+  border-radius:12px;padding:12px 14px;margin-top:10px;font-weight:700;font-size:15px;
+  animation:pop .2s ease;
+}
+.feedback.ok{background:#DCF3E2;color:#1F5C34;border:2px solid #2E8B4D;}
+.feedback.bad{background:#F8DCD4;color:#7A2A1B;border:2px solid var(--clay-600);}
+
+.progress-track{
+  background:rgba(255,255,255,0.15);border-radius:20px;height:10px;overflow:hidden;margin:6px 0 16px;
+}
+.progress-fill{background:var(--gold-500);height:100%;transition:width .3s;}
+
+.mapwrap{position:relative;padding:10px 0 20px;}
+.mappath{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.mapnode{
+  width:100%;max-width:520px;
+  background:var(--parchment);
+  border:3px solid var(--gold-500);
+  border-radius:16px;
+  padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+  color:var(--ink);
+}
+.mapnode.locked{opacity:.45;filter:grayscale(0.6);}
+.mapnode .num{
+  width:46px;height:46px;border-radius:50%;background:var(--forest-700);color:var(--white);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;flex-shrink:0;
+  font-family:'Baloo 2';
+}
+.mapnode .info{flex:1;}
+.mapnode .info .t{font-weight:800;font-size:17px;font-family:'Baloo 2';}
+.mapnode .info .s{font-size:12px;color:#5b4a2f;font-weight:700;}
+.mapnode .go{font-size:26px;}
+.mapline{width:4px;height:20px;background:repeating-linear-gradient(180deg,var(--gold-500) 0 6px, transparent 6px 12px);}
+
+.hearts{display:flex;gap:3px;}
+.hint-hidden{display:none !important;}
+
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--gold-300);color:var(--ink);
+  border-radius:20px;padding:6px 12px;font-weight:800;font-size:13px;margin:3px 4px 3px 0;
+}
+
+.startscreen{text-align:center;padding:30px 10px 10px;}
+.startscreen h1{font-size:32px;margin:6px 0;color:var(--gold-300);text-shadow:0 3px 0 rgba(0,0,0,0.35);}
+.startscreen .sub{font-size:15px;color:var(--leaf-300);font-weight:700;margin-bottom:22px;}
+.bigemoji{font-size:70px;margin-bottom:6px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.25));}
+
+.timerbar{height:8px;border-radius:6px;background:rgba(0,0,0,0.15);overflow:hidden;margin:8px 0;}
+.timerfill{height:100%;background:var(--clay-600);transition:width .2s linear;}
+
+.hp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.hp-row .who{font-weight:800;font-size:14px;}
+
+.canvas-wrap{
+  background:var(--white);border-radius:14px;border:2.5px solid var(--parchment-dark);
+  padding:16px;text-align:center;min-height:150px;display:flex;align-items:center;justify-content:center;
+  font-size:52px;letter-spacing:6px;flex-wrap:wrap;gap:4px;
+}
+.symcell{
+  width:48px;height:48px;border-radius:8px;background:#EFE8D2;border:2px solid var(--parchment-dark);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.symcell.filled{background:#DCF3E2;border-color:#2E8B4D;}
+.symrow{display:flex;gap:4px;justify-content:center;margin-bottom:4px;}
+.symmid{width:3px;background:var(--clay-600);border-radius:2px;}
+
+textarea.reason{
+  width:100%;min-height:70px;border:2.5px solid var(--parchment-dark);border-radius:12px;
+  padding:10px;font-family:'Nunito';font-size:15px;color:var(--ink);resize:vertical;
+}
+
+.toast{
+  position:fixed;left:50%;top:14px;transform:translateX(-50%);
+  background:var(--ink);color:var(--gold-300);padding:10px 18px;border-radius:30px;
+  font-weight:800;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.3);
+  animation:toastIn .25s ease;
+}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,-14px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden;}
+.confetti-piece{position:absolute;top:-20px;font-size:20px;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.2;}}
+
+.floaty{animation:floaty 3s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.spin-in{animation:spinIn .4s ease;}
+@keyframes spinIn{from{transform:rotate(-8deg) scale(.85);opacity:0}to{transform:rotate(0) scale(1);opacity:1}}
+
+.canvas-wrap.wrong{animation:shake .4s;border-color:var(--clay-600) !important;}
+.footer-note{text-align:center;font-size:12px;color:var(--leaf-300);margin-top:20px;opacity:.8;}
+kbd{background:rgba(255,255,255,.15);border-radius:5px;padding:1px 7px;font-family:monospace;}
+.hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div id="gameRoot">
+  <div class="topbar" id="topbar"></div>
+  <div id="app"></div>
+</div>
+<div id="toastLayer"></div>
+<div id="confettiLayer" class="confetti-layer"></div>
+
+<script>
+/* ====================== AUDIO (ringan, tanpa file eksternal) ====================== */
+let audioCtx=null;
+function ac(){ if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return audioCtx; }
+function beep(freq,dur,type,vol){
+  if(state.muted) return;
+  const c=ac(); if(!c) return;
+  const o=c.createOscillator(); const g=c.createGain();
+  o.type=type||'sine'; o.frequency.value=freq;
+  g.gain.value=(vol!==undefined?vol:0.06);
+  o.connect(g); g.connect(c.destination);
+  o.start();
+  g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime+dur);
+  o.stop(c.currentTime+dur);
+}
+function sfxCorrect(){ beep(523,.12,'sine'); setTimeout(()=>beep(784,.16,'sine'),100); }
+function sfxWrong(){ beep(160,.22,'sawtooth',0.05); }
+function sfxClick(){ beep(300,.05,'square',0.03); }
+function sfxUnlock(){ beep(392,.1);setTimeout(()=>beep(523,.1),90);setTimeout(()=>beep(659,.18),180); }
+function sfxWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.22),i*130)); }
+function sfxLose(){ beep(220,.3,'sawtooth',0.06); setTimeout(()=>beep(160,.4,'sawtooth',0.06),150); }
+
+/* ====================== STORAGE ====================== */
+async function saveGame(){
+  try{
+    const data={score:state.score,coins:state.coins,hints:state.hints,unlocked:state.unlocked,
+      achievements:[...state.achievements],levelDone:state.levelDone,inventory:state.inventory,muted:state.muted};
+    await window.storage.set('motif-dayak-save', JSON.stringify(data));
+    toast('💾 Progres tersimpan');
+  }catch(e){ toast('Gagal menyimpan progres'); }
+}
+async function loadGame(){
+  try{
+    const r=await window.storage.get('motif-dayak-save');
+    if(r && r.value){
+      const d=JSON.parse(r.value);
+      state.score=d.score||0; state.coins=d.coins||0; state.hints=(d.hints!==undefined?d.hints:3);
+      state.unlocked=d.unlocked||1; state.achievements=new Set(d.achievements||[]);
+      state.levelDone=d.levelDone||{}; state.inventory=d.inventory||[]; state.muted=!!d.muted;
+      toast('📂 Progres dimuat');
+    } else { toast('Belum ada progres tersimpan'); }
+  }catch(e){ toast('Belum ada progres tersimpan'); }
+  render();
+}
+
+/* ====================== STATE ====================== */
+const state={
+  screen:'start', levelIndex:0, stepIndex:0,
+  score:0, lives:3, coins:0, hints:3,
+  unlocked:1, achievements:new Set(), levelDone:{}, inventory:[],
+  muted:false, paused:false,
+  tempSel:[], tempOrder:[], attemptWrong:false,
+  bossHP:5, playerHP:5, bossQueue:[], bossIdx:0,
+  finalProject:{}, sessionStats:{correct:0,wrong:0,natureFound:0,patternsDone:0,symmetryDone:0,colorDone:0,techniqueDone:0,cultureDone:0}
+};
+
+function toast(msg){
+  const el=document.createElement('div'); el.className='toast'; el.textContent=msg;
+  document.getElementById('toastLayer').appendChild(el);
+  setTimeout(()=>el.remove(),2200);
+}
+function confetti(){
+  const layer=document.getElementById('confettiLayer');
+  const emojis=['🎉','✨','🍃','🎊','⭐'];
+  for(let i=0;i<26;i++){
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left=Math.random()*100+'vw';
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';
+    p.style.fontSize=(14+Math.random()*16)+'px';
+    layer.appendChild(p);
+    setTimeout(()=>p.remove(),3600);
+  }
+}
+
+/* ====================== MATERI (fakta dasar dipakai berulang) ====================== */
+const FACTS={
+  motif:"Motif adalah bentuk atau gambar dasar yang digunakan berulang-ulang sebagai hiasan pada suatu karya.",
+  merancang:"Merancang motif berarti merencanakan dan menyusun desain motif melalui tahapan tertentu sebelum digambar.",
+  unsur:"Empat unsur motif: garis, bentuk, pola, dan warna.",
+  inspirasi:"Alam sekitar seperti daun, pakis, burung enggang, ikan, dan sulur bisa menjadi sumber inspirasi motif.",
+  sederhana:"Penyederhanaan bentuk artinya mengubah objek asli yang rumit menjadi bentuk sederhana, tapi ciri khasnya tetap terlihat.",
+  polaAA:"Pola A-A-A-A artinya satu motif yang sama diulang terus-menerus.",
+  polaAB:"Pola A-B-A-B artinya dua motif berbeda disusun berselang-seling.",
+  arah:"Pola berulang juga bisa mengalami perubahan arah, misalnya menghadap atas lalu bawah secara bergantian.",
+  simetri:"Simetri kiri-kanan artinya bentuk di sisi kiri dan kanan sebuah motif seimbang atau sama.",
+  warna:"Pemilihan warna memberi kesan tertentu pada motif, tapi maknanya bisa berbeda tergantung budaya, daerah, dan konteks pemakaiannya.",
+  langkah:"Langkah merancang motif: tentukan inspirasi → amati bentuk → sederhanakan → tambahkan garis → buat pola berulang → atur simetri → tentukan warna → berikan makna.",
+  teknik:"Teknik membuat motif: menggambar manual, membuat pola berulang, mengatur simetri, menggabungkan bentuk, dan mewarnai.",
+  budaya:"Motif Dayak adalah bagian dari kekayaan budaya yang perlu dikenali dan dihargai, bukan ditiru sembarangan."
+};
+
+/* ====================== DATA LEVEL ====================== */
+const LEVELS=[
+/* ---------- LEVEL 1 ---------- */
+{
+  id:1, emoji:'🏠', title:'Desa Motif', theme:'Mengenal Motif', reward:'🔑 Kunci Desa Motif', rewardKey:'kunci',
+  npc:'🧓', npcName:'Penjaga Desa',
+  intro:"Selamat datang di Desa Motif! Di sini banyak benda polos tanpa hiasan. Jika kamu ingin menjadi <b>Desainer Motif</b>, kamu harus paham dulu apa itu motif.",
+  steps:[
+    {type:'narrative', text:"Lihat sekelilingmu. Ada pakaian, tas, ukiran, rumah, dan aksesori yang masih polos. Bantu aku memilih benda-benda yang bisa dihias dengan motif!"},
+    {type:'select-multi', prompt:'Pilih semua benda yang dapat dihias menggunakan motif:',
+     options:[
+       {id:'pakaian',label:'👕 Pakaian',correct:true},
+       {id:'tas',label:'👜 Tas',correct:true},
+       {id:'ukiran',label:'🗿 Ukiran',correct:true},
+       {id:'rumah',label:'🏠 Rumah',correct:true},
+       {id:'aksesori',label:'📿 Aksesori',correct:true},
+       {id:'awan',label:'☁️ Awan',correct:false}
+     ],
+     explanation:"Benar! Pakaian, tas, ukiran, rumah, dan aksesori semuanya bisa dihias dengan motif. Awan adalah benda alami yang bukan hasil karya, jadi tidak dihias motif.",
+     hint:"Pikirkan benda buatan manusia yang bisa dihias, bukan benda alam di langit."},
+    {type:'mcq', prompt:'Apa yang dimaksud dengan "motif"?',
+     options:[
+       {id:'a',text:'Bentuk atau gambar dasar yang digunakan berulang-ulang sebagai hiasan pada suatu karya'},
+       {id:'b',text:'Warna dasar yang dipakai dalam lukisan'},
+       {id:'c',text:'Nama alat menggambar tradisional'},
+       {id:'d',text:'Bahan dasar pembuatan kain'}
+     ], correct:['a'], explanation:FACTS.motif, hint:'Ingat kata kunci: "diulang-ulang sebagai hiasan".'},
+    {type:'mcq', prompt:'Apa arti dari "merancang motif"?',
+     options:[
+       {id:'a',text:'Langsung menggambar tanpa rencana'},
+       {id:'b',text:'Merencanakan dan menyusun desain motif melalui tahapan tertentu sebelum digambar'},
+       {id:'c',text:'Meniru motif orang lain secara utuh'},
+       {id:'d',text:'Menghapus motif yang sudah ada'}
+     ], correct:['b'], explanation:FACTS.merancang, hint:'Kata "merancang" berarti ada proses perencanaan.'},
+    {type:'truefalse', prompt:'Benar atau salah: Motif hanya bisa dibuat dengan meniru motif orang lain tanpa proses berpikir.',
+     answer:false, explanation:"Salah. Merancang motif memerlukan proses berpikir, mulai dari mencari inspirasi hingga menentukan warna — bukan sekadar meniru.", hint:'Ingat, ada langkah-langkah dalam merancang motif.'}
+  ]
+},
+/* ---------- LEVEL 2 ---------- */
+{
+  id:2, emoji:'🌿', title:'Hutan Inspirasi', theme:'Mencari Inspirasi dari Alam', reward:'🌿 Lencana Penjelajah Alam', rewardKey:'lencana',
+  npc:'🦉', npcName:'Burung Hantu Penunjuk Jalan',
+  intro:"Hutan ini menyimpan banyak sumber inspirasi. Sebelum menciptakan motif, seorang desainer harus mengenali bentuk-bentuk di alam sekitarnya.",
+  steps:[
+    {type:'narrative', text:"Temukan lima objek alam yang bisa menjadi inspirasi motif: daun, pakis, burung enggang, ikan, dan sulur!"},
+    {type:'select-multi', prompt:'Temukan 5 objek inspirasi alam di hutan ini (sentuh semua yang benar):',
+     options:[
+       {id:'daun',label:'🍃 Daun',correct:true},
+       {id:'pakis',label:'🌿 Pakis',correct:true},
+       {id:'enggang',label:'🦅 Burung Enggang',correct:true},
+       {id:'ikan',label:'🐟 Ikan',correct:true},
+       {id:'sulur',label:'〰️ Sulur',correct:true},
+       {id:'batu',label:'🪨 Batu Biasa',correct:false},
+       {id:'awan2',label:'☁️ Awan',correct:false}
+     ],
+     explanation:"Hebat! Daun, pakis, burung enggang, ikan, dan sulur adalah objek alam yang sering dijadikan inspirasi motif.",
+     hint:'Cari lima objek hidup/tumbuhan dan hewan yang disebutkan tadi.', achieveOnPerfect:'penjelajah'},
+    {type:'mcq', prompt:'Mengapa alam sekitar bisa menjadi sumber inspirasi motif?',
+     options:[
+       {id:'a',text:'Karena bentuknya unik dan bisa diamati langsung oleh desainer'},
+       {id:'b',text:'Karena alam tidak memiliki bentuk'},
+       {id:'c',text:'Karena motif harus dibeli dari toko'},
+       {id:'d',text:'Karena warnanya selalu sama'}
+     ], correct:['a'], explanation:FACTS.inspirasi, hint:'Pikirkan mengapa desainer suka mengamati lingkungan sekitar.'},
+    {type:'mcq', prompt:'Bagian burung enggang mana saja yang dapat dijadikan inspirasi bentuk motif? (boleh lebih dari satu)',
+     multi:true,
+     options:[
+       {id:'kepala',text:'Kepala'},
+       {id:'paruh',text:'Paruh'},
+       {id:'sayap',text:'Sayap'},
+       {id:'ekor',text:'Ekor'}
+     ], correct:['kepala','paruh','sayap','ekor'],
+     explanation:"Semua bagian tubuh burung enggang — kepala, paruh, sayap, dan ekor — memiliki bentuk khas yang bisa menjadi inspirasi motif.",
+     hint:'Coba pikirkan, adakah bagian tubuh burung enggang yang bentuknya biasa saja?'},
+    {type:'mcq', prompt:'Selain hewan dan tumbuhan yang sudah kamu temukan, dari mana lagi seorang desainer bisa mendapatkan ide motif?',
+     options:[
+       {id:'a',text:'Dari lingkungan sekitar yang ia amati sehari-hari'},
+       {id:'b',text:'Dari benda yang belum pernah ia lihat sama sekali'},
+       {id:'c',text:'Dari motif yang sudah jadi tanpa diamati'},
+       {id:'d',text:'Tidak perlu sumber inspirasi'}
+     ], correct:['a'], explanation:FACTS.inspirasi, hint:'Ingat kembali kalimat pembuka level ini.'}
+  ]
+},
+/* ---------- LEVEL 3 ---------- */
+{
+  id:3, emoji:'✏️', title:'Bengkel Penyederhanaan', theme:'Mengubah Objek Menjadi Motif', reward:'✏️ Pensil Desainer', rewardKey:'pensil',
+  npc:'👨‍🎨', npcName:'Pak Ukir, Sang Perajin',
+  intro:"Objek asli di alam biasanya rumit. Seorang desainer perlu menyederhanakannya menjadi bentuk motif, tapi ciri khasnya harus tetap terlihat.",
+  steps:[
+    {type:'narrative', text:"Perhatikan urutan berikut: burung asli, lalu ciri utamanya diambil, disederhanakan, baru menjadi motif. Susun urutan yang tepat!"},
+    {type:'order', prompt:'Susun tahapan penyederhanaan bentuk dengan urutan yang benar (sentuh sesuai urutan):',
+     items:[
+       {id:'asli',label:'🦅 Burung Enggang Asli'},
+       {id:'ciri',label:'❓ Pilih Ciri Utama'},
+       {id:'sederhana',label:'✏️ Sederhanakan Bentuk'},
+       {id:'motif',label:'🎨 Jadi Motif'}
+     ], correctOrder:['asli','ciri','sederhana','motif'],
+     explanation:FACTS.sederhana, hint:'Mulai dari bentuk aslinya, baru menuju bentuk motif jadi.'},
+    {type:'mcq', prompt:'Manakah bentuk yang paling sesuai untuk dijadikan motif sederhana dari seekor ikan?',
+     options:[
+       {id:'a',text:'Bentuk ikan lengkap dengan sisik detail dan bayangan realistis'},
+       {id:'b',text:'Garis lengkung tubuh, sirip, dan ekor yang disederhanakan tapi tetap dikenali sebagai ikan'},
+       {id:'c',text:'Kotak persegi tanpa ciri ikan sama sekali'},
+       {id:'d',text:'Foto ikan yang ditempel langsung'}
+     ], correct:['b'], explanation:FACTS.sederhana, hint:'Motif sederhana bukan berarti detail hilang total, tapi ciri khasnya tetap ada.'},
+    {type:'mcq', prompt:'Dari gambar seekor ikan, bagian mana saja yang menjadi bagian utama untuk disederhanakan menjadi motif? (boleh lebih dari satu)',
+     multi:true,
+     options:[
+       {id:'tubuh',text:'Tubuh'},
+       {id:'kepala',text:'Kepala'},
+       {id:'sirip',text:'Sirip'},
+       {id:'ekor',text:'Ekor'}
+     ], correct:['tubuh','kepala','sirip','ekor'],
+     explanation:"Tubuh, kepala, sirip, dan ekor adalah bagian-bagian utama ikan yang dapat disederhanakan menjadi ciri khas motif.",
+     hint:'Coba bayangkan bagian tubuh ikan mana yang paling mudah dikenali bentuknya.'},
+    {type:'truefalse', prompt:'Benar atau salah: Saat menyederhanakan bentuk, semua ciri khas objek boleh dihilangkan asal terlihat rapi.',
+     answer:false, explanation:"Salah. Penyederhanaan bentuk harus tetap mempertahankan ciri khas objek aslinya, bukan menghilangkannya sepenuhnya.", hint:'Ingat definisi penyederhanaan bentuk.'}
+  ]
+},
+/* ---------- LEVEL 4 ---------- */
+{
+  id:4, emoji:'🔄', title:'Lembah Pola', theme:'Membuat Pola yang Berulang', reward:'🔄 Kristal Pola', rewardKey:'kristal',
+  npc:'🧝', npcName:'Penjaga Lembah',
+  intro:"Di Lembah ini, huruf-huruf tersembunyi di antara kotak batu kuno. Temukan kata rahasia yang berkaitan dengan pola berulang untuk membuka jalan!",
+  steps:[
+    {type:'narrative', text:"Sentuh kotak-kotak huruf sesuai urutan untuk menyusun kata yang tepat berdasarkan petunjuk yang diberikan."},
+    {type:'wordfind', prompt:'Temukan kata tersembunyi #1:', clue:'Susunan bentuk atau motif yang disusun secara teratur dan diulang-ulang disebut...',
+     word:'POLA', explanation:FACTS.polaAA, hint:'Kata ini juga menjadi nama lembah tempatmu berada sekarang.'},
+    {type:'wordfind', prompt:'Temukan kata tersembunyi #2:', clue:'Ketika satu motif yang sama disusun terus-menerus (contoh: 🍃-🍃-🍃-🍃), motif itu di...',
+     word:'ULANG', explanation:FACTS.polaAA, hint:'Ambil kata dasar dari "berulang-ulang".'},
+    {type:'wordfind', prompt:'Temukan kata tersembunyi #3:', clue:'Selain berulang, sebuah pola juga bisa mengalami perubahan... (contoh: menghadap atas lalu bawah secara bergantian)',
+     word:'ARAH', explanation:FACTS.arah, hint:'Kata ini berkaitan dengan hadap sebuah motif.'},
+    {type:'wordfind', prompt:'Temukan kata tersembunyi #4:', clue:'Bentuk atau gambar dasar yang digunakan berulang-ulang sebagai hiasan pada suatu karya disebut...',
+     word:'MOTIF', explanation:FACTS.motif, hint:'Ini adalah kata paling penting dalam seluruh petualanganmu!'}
+  ]
+},
+/* ---------- LEVEL 5 ---------- */
+{
+  id:5, emoji:'🎨', title:'Galeri Warna', theme:'Menentukan Warna dan Maknanya', reward:'🎨 Palet Warna Desainer', rewardKey:'palet',
+  npc:'🧑‍🎨', npcName:'Bu Warni, Penjaga Galeri',
+  intro:"Warna memberi jiwa pada sebuah motif. Tapi ingat — makna warna bisa berbeda tergantung budaya, daerah, dan konteksnya.",
+  steps:[
+    {type:'narrative', text:"Lihat, motif ini masih polos tanpa warna. Kita akan belajar memilih warna yang tepat dan memahami kesan setiap warna."},
+    {type:'mcq', prompt:'Warna merah pada sebuah motif sering memberi kesan...',
+     options:[
+       {id:'a',text:'Berani, kuat, dan bersemangat'},
+       {id:'b',text:'Selalu berarti bahaya di semua budaya'},
+       {id:'c',text:'Tidak memiliki kesan apapun'},
+       {id:'d',text:'Hanya boleh dipakai untuk bendera'}
+     ], correct:['a'], explanation:"Merah sering memberi kesan berani, kuat, dan bersemangat — tapi ingat, makna warna bisa berbeda di setiap budaya, daerah, dan konteks.", hint:'Pikirkan kesan umum warna merah, bukan aturan mutlak.'},
+    {type:'mcq', prompt:'Warna kuning pada motif sering memberi kesan...',
+     options:[
+       {id:'a',text:'Gelap dan menyeramkan'},
+       {id:'b',text:'Cerah, hangat, dan menarik perhatian'},
+       {id:'c',text:'Dingin dan kaku'},
+       {id:'d',text:'Tidak terlihat sama sekali'}
+     ], correct:['b'], explanation:"Kuning memberi kesan cerah, hangat, dan menarik perhatian.", hint:'Bayangkan warna matahari.'},
+    {type:'mcq', prompt:'Manakah pernyataan yang PALING TEPAT tentang makna warna dalam motif?',
+     options:[
+       {id:'a',text:'Setiap warna selalu memiliki satu makna mutlak yang sama di semua tempat'},
+       {id:'b',text:'Makna warna dapat berbeda tergantung budaya, daerah, dan konteks penggunaannya'},
+       {id:'c',text:'Warna tidak pernah memiliki makna apapun'},
+       {id:'d',text:'Hanya warna hitam yang memiliki makna'}
+     ], correct:['b'], explanation:FACTS.warna, hint:'Ingat pesan penting Bu Warni di awal level ini.'},
+    {type:'select-multi', prompt:'Pilih kombinasi warna di bawah ini yang memberi KONTRAS dan KESEIMBANGAN yang baik untuk sebuah motif (pilih satu atau lebih yang menurutmu paling pas):',
+     options:[
+       {id:'k1',label:'⚫⚪ Hitam & Putih',correct:true},
+       {id:'k2',label:'🔴⚫ Merah & Hitam',correct:true},
+       {id:'k3',label:'🟡🟢 Kuning & Hijau',correct:true},
+       {id:'k4',label:'⚪⚪ Putih & Putih',correct:false}
+     ],
+     explanation:"Kombinasi warna yang berbeda tingkat terang-gelapnya (seperti hitam-putih atau merah-hitam) memberi kontras dan keseimbangan yang baik. Warna yang sama tidak menghasilkan kontras.",
+     hint:'Kontras muncul saat dua warna punya perbedaan terang-gelap yang jelas.'}
+  ]
+},
+/* ---------- LEVEL 6 ---------- */
+{
+  id:6, emoji:'🛠️', title:'Kampung Teknik', theme:'Teknik Membuat Motif', reward:'🛠️ Alat Desainer', rewardKey:'alat',
+  npc:'👴', npcName:'Kek Karya, Sang Pengrajin',
+  intro:"Di kampung ini kamu akan belajar lima teknik penting: menggambar manual, pola berulang, simetri, menggabungkan bentuk, dan mewarnai.",
+  steps:[
+    {type:'order', prompt:'Mini Game 1 — Susun langkah menggambar motif secara manual dengan urutan yang benar:',
+     items:[
+       {id:'s1',label:'📄 Siapkan kertas'},
+       {id:'s2',label:'🎯 Tentukan objek'},
+       {id:'s3',label:'✏️ Buat sketsa'},
+       {id:'s4',label:'🔽 Sederhanakan'},
+       {id:'s5',label:'✒️ Perjelas garis'},
+       {id:'s6',label:'🔁 Tambahkan pola'},
+       {id:'s7',label:'🧹 Hapus garis bantu'},
+       {id:'s8',label:'🎨 Beri warna'}
+     ], correctOrder:['s1','s2','s3','s4','s5','s6','s7','s8'],
+     explanation:FACTS.teknik, hint:'Mulai dari persiapan bahan, akhiri dengan pewarnaan.'},
+    {type:'build', prompt:'Mini Game 2 — Pola Berulang. Susun motif Daun-Ikan-Daun-Ikan:',
+     palette:[{id:'daun',label:'🍃'},{id:'ikan',label:'🐟'}], slotCount:4, patternRule:'ABAB',
+     explanation:FACTS.polaAB, hint:'Ingat pola A-B-A-B: dua motif berselang-seling.'},
+    {type:'symmetry', prompt:'Mini Game 3 — Simetri. Setengah motif sudah tergambar di kiri. Sentuh sel di kanan agar menjadi simetris (cerminan)!',
+     rows:3, cols:3, leftPattern:[[1,0,0],[1,1,0],[1,0,0]],
+     explanation:FACTS.simetri, hint:'Cerminkan posisi sel yang terisi di kiri ke sisi kanan.'},
+    {type:'select-multi', prompt:'Mini Game 4 — Gabungkan Bentuk. Pilih semua bentuk yang diminta untuk digabung menjadi satu motif: Daun, Sulur, dan Garis.',
+     options:[
+       {id:'daun2',label:'🍃 Daun',correct:true},
+       {id:'sulur2',label:'〰️ Sulur',correct:true},
+       {id:'garis2',label:'📏 Garis',correct:true},
+       {id:'ikan2',label:'🐟 Ikan',correct:false},
+       {id:'batu2',label:'🪨 Batu',correct:false}
+     ], explanation:"Menggabungkan beberapa bentuk (daun, sulur, dan garis) menjadi satu motif adalah salah satu teknik penting dalam merancang motif.",
+     hint:'Pilih tepat tiga bentuk yang disebutkan dalam instruksi.'},
+    {type:'colorfill', prompt:'Mini Game 5 — Mewarnai. Motif ini masih hitam-putih. Pilih warna utama dan warna pendukung:',
+     regions:[{id:'utama',label:'Warna Utama'},{id:'pendukung',label:'Warna Pendukung'}],
+     palette:[{id:'merah',color:'#C1502F',label:'Merah'},{id:'hitam',color:'#241A10',label:'Hitam'},{id:'kuning',color:'#D9A441',label:'Kuning'},{id:'putih',color:'#F3E7C9',label:'Putih'},{id:'hijau',color:'#3E8E6E',label:'Hijau'}],
+     explanation:"Bagus! Memilih warna utama dan warna pendukung yang kontras akan membuat motif terlihat rapi dan seimbang.",
+     hint:'Pilih dua warna yang berbeda terang-gelapnya agar kontras terasa.'}
+  ]
+},
+/* ---------- LEVEL 7 ---------- */
+{
+  id:7, emoji:'🏛️', title:'Kuil Desainer', theme:'Merancang Motif dari Awal hingga Akhir', reward:'🏛️ Medali Perancang', rewardKey:'medali',
+  npc:'🧙', npcName:'Guru Rancang',
+  intro:"Ini adalah ujian gabungan dari semua yang telah kamu pelajari. Ikuti kedelapan tahap merancang motif untuk membuka pintu Kuil!",
+  steps:[
+    {type:'mcq', prompt:'TAHAP 1 — Menentukan sumber inspirasi. Pilih sumber inspirasimu:',
+     options:[{id:'a',text:'🍃 Daun'},{id:'b',text:'🦅 Burung Enggang'},{id:'c',text:'🐟 Ikan'},{id:'d',text:'〰️ Sulur'}],
+     correct:['a','b','c','d'], anyCorrect:true, saveTo:'inspirasi',
+     explanation:"Tahap pertama merancang motif adalah menentukan sumber inspirasi dari alam sekitar.", hint:'Semua pilihan adalah sumber inspirasi yang sah — pilih sesuai seleramu.'},
+    {type:'mcq', prompt:'TAHAP 2 — Mengamati bentuk objek. Apa tujuan tahap ini?',
+     options:[
+       {id:'a',text:'Mengenali ciri khas bentuk objek sebelum digambar'},
+       {id:'b',text:'Langsung mewarnai tanpa melihat objek'},
+       {id:'c',text:'Menghapus semua ciri objek'},
+       {id:'d',text:'Mengukur berat objek'}
+     ], correct:['a'], explanation:"Mengamati bentuk objek bertujuan mengenali ciri khasnya sebelum diubah menjadi motif.", hint:'Pikirkan mengapa kita perlu "melihat dulu" sebelum menggambar.'},
+    {type:'mcq', prompt:'TAHAP 3 — Menyederhanakan bentuk. Apa inti dari tahap ini?',
+     options:[
+       {id:'a',text:'Mengubah bentuk rumit menjadi sederhana tapi ciri khasnya tetap terlihat'},
+       {id:'b',text:'Membuat bentuk menjadi lebih rumit'},
+       {id:'c',text:'Menghapus objek sepenuhnya'},
+       {id:'d',text:'Mengganti objek dengan objek lain'}
+     ], correct:['a'], explanation:FACTS.sederhana, hint:'Ingat kembali Bengkel Penyederhanaan di Level 3.'},
+    {type:'mcq', prompt:'TAHAP 4 — Menambahkan unsur garis. Garis termasuk salah satu unsur motif apa?',
+     options:[{id:'a',text:'Unsur motif, bersama bentuk, pola, dan warna'},{id:'b',text:'Bukan bagian dari motif'},{id:'c',text:'Hanya dipakai untuk menulis'},{id:'d',text:'Sama dengan warna'}],
+     correct:['a'], explanation:FACTS.unsur, hint:'Ingat empat unsur motif dari Level 1.'},
+    {type:'pattern', prompt:'TAHAP 5 — Membuat pola berulang. Lengkapi pola:', sequence:['🍃','〰️','🍃','?'], answerType:'ABAB',
+     options:['🍃','〰️','🐟'], correct:'〰️', explanation:FACTS.polaAB, hint:'Pola A-B-A-B berselang-seling.'},
+    {type:'symmetry', prompt:'TAHAP 6 — Mengatur simetri. Lengkapi sisi kanan agar simetris dengan kiri:',
+     rows:2, cols:3, leftPattern:[[1,1,0],[1,0,0]],
+     explanation:FACTS.simetri, hint:'Cerminkan posisi sel kiri ke kanan.'},
+    {type:'mcq', prompt:'TAHAP 7 — Menentukan warna. Apa yang harus kamu ingat saat memilih warna motif?',
+     options:[
+       {id:'a',text:'Makna warna bisa berbeda tergantung budaya, daerah, dan konteks'},
+       {id:'b',text:'Warna tidak penting dalam motif'},
+       {id:'c',text:'Semua warna memiliki makna yang sama di semua tempat'},
+       {id:'d',text:'Warna harus selalu hitam'}
+     ], correct:['a'], explanation:FACTS.warna, hint:'Ingat pesan penting di Galeri Warna.'},
+    {type:'reasoning', prompt:'TAHAP 8 — Memberikan makna. Tuliskan singkat, apa makna yang ingin kamu berikan pada motif rancanganmu?',
+     explanation:"Bagus! Memberikan makna pada motif adalah tahap akhir yang membuat rancanganmu memiliki cerita dan nilai tersendiri."}
+  ]
+},
+/* ---------- LEVEL 8 ---------- */
+{
+  id:8, emoji:'🏛️', title:'Ujian Desainer', theme:'Final Design Challenge', reward:'🏆 Gelar Desainer Motif Dayak Muda', rewardKey:'gelar',
+  npc:'👑', npcName:'Dewan Desainer',
+  intro:"Ini ujian terakhir sebelum Final Boss. Buat semua keputusan rancanganmu sendiri berdasarkan semua yang telah kamu pelajari!",
+  steps:[
+    {type:'mcq', prompt:'Tantangan 1 — Pilih objek inspirasi:', options:[{id:'a',text:'🍃 Daun'},{id:'b',text:'🌿 Pakis'},{id:'c',text:'🦅 Enggang'},{id:'d',text:'🐟 Ikan'},{id:'e',text:'〰️ Sulur'}], correct:['a','b','c','d','e'], anyCorrect:true, saveTo:'objek', explanation:"Semua objek alam ini sah dijadikan inspirasi, sesuai materi yang sudah kamu pelajari.", hint:'Pilih sesuai seleramu.'},
+    {type:'mcq', prompt:'Tantangan 2 — Pilih bentuk utama motifmu:', options:[{id:'a',text:'Lengkung'},{id:'b',text:'Lurus bercabang'},{id:'c',text:'Bulat'},{id:'d',text:'Meliuk seperti sulur'}], correct:['a','b','c','d'], anyCorrect:true, saveTo:'bentuk', explanation:"Bentuk utama akan menjadi ciri khas motifmu.", hint:'Pilih bentuk yang sesuai objek inspirasimu.'},
+    {type:'mcq', prompt:'Tantangan 3 — Pilih jenis garis untuk motifmu:', options:[{id:'a',text:'Garis lengkung'},{id:'b',text:'Garis lurus'},{id:'c',text:'Garis putus-putus'},{id:'d',text:'Kombinasi lengkung dan lurus'}], correct:['a','b','c','d'], anyCorrect:true, saveTo:'garis', explanation:FACTS.unsur, hint:'Garis adalah salah satu unsur motif.'},
+    {type:'mcq', prompt:'Tantangan 4 — Pilih jenis pola untuk motifmu:', options:[{id:'a',text:'A-A-A-A'},{id:'b',text:'A-B-A-B'},{id:'c',text:'Pola dengan perubahan arah'}], correct:['a','b','c'], anyCorrect:true, saveTo:'pola', explanation:FACTS.polaAA+" "+FACTS.polaAB, hint:'Ingat kembali Lembah Pola.'},
+    {type:'mcq', prompt:'Tantangan 5 — Pilih jenis pengulangan motifmu:', options:[{id:'a',text:'Horizontal'},{id:'b',text:'Vertikal'},{id:'c',text:'Diagonal'},{id:'d',text:'Melingkar'}], correct:['a','b','c','d'], anyCorrect:true, saveTo:'pengulangan', explanation:"Pengulangan pola bisa disusun secara horizontal, vertikal, diagonal, atau melingkar.", hint:'Pilih arah pengulangan yang kamu suka.'},
+    {type:'symmetry', prompt:'Tantangan 6 — Pilih simetri motifmu. Lengkapi sisi kanan agar simetris:',
+     rows:2, cols:3, leftPattern:[[0,1,1],[1,0,1]], explanation:FACTS.simetri, hint:'Cerminkan posisi kiri ke kanan.'},
+    {type:'mcq', prompt:'Tantangan 7 — Pilih kombinasi warna motifmu:', options:[{id:'a',text:'Merah & Hitam'},{id:'b',text:'Kuning & Hijau'},{id:'c',text:'Hitam & Putih'},{id:'d',text:'Hijau & Putih'}], correct:['a','b','c','d'], anyCorrect:true, saveTo:'warna', explanation:FACTS.warna, hint:'Pilih kombinasi dengan kontras yang baik.'},
+    {type:'reasoning', prompt:'Tantangan 8 — Tuliskan alasanmu memilih objek inspirasi tadi:', saveTo:'alasanObjek',
+     explanation:"Memahami alasan di balik pilihanmu menunjukkan kamu benar-benar merancang, bukan sekadar menebak."},
+    {type:'reasoning', prompt:'Tantangan 9 — Tuliskan alasanmu memilih kombinasi warna tadi:', saveTo:'alasanWarna',
+     explanation:"Alasan pemilihan warna membantumu memahami makna dan kesan yang ingin kamu tunjukkan lewat motifmu."}
+  ]
+}
+];
+
+/* Kumpulan soal untuk Boss Battle (diambil ulang dari materi, tipe bervariasi) */
+const BOSS_POOL=[
+  {type:'mcq', prompt:'Apa itu motif?', options:[{id:'a',text:'Bentuk/gambar dasar yang diulang-ulang sebagai hiasan'},{id:'b',text:'Nama sungai di hutan'},{id:'c',text:'Jenis makanan tradisional'},{id:'d',text:'Alat musik'}], correct:['a'], explanation:FACTS.motif},
+  {type:'mcq', prompt:'Sebutkan salah satu unsur motif!', options:[{id:'a',text:'Garis'},{id:'b',text:'Rasa'},{id:'c',text:'Bau'},{id:'d',text:'Suhu'}], correct:['a'], explanation:FACTS.unsur},
+  {type:'pattern', prompt:'Lengkapi pola: 🍃-🍃-🍃-?', sequence:['🍃','🍃','🍃','?'], options:['🍃','🐟','〰️'], correct:'🍃', explanation:FACTS.polaAA},
+  {type:'pattern', prompt:'Lengkapi pola: 🐟-🍃-🐟-?', sequence:['🐟','🍃','🐟','?'], options:['🍃','🐟','〰️'], correct:'🍃', explanation:FACTS.polaAB},
+  {type:'mcq', prompt:'Apa maksud penyederhanaan bentuk?', options:[{id:'a',text:'Mengubah bentuk rumit jadi sederhana namun ciri khas tetap ada'},{id:'b',text:'Menghapus objek sepenuhnya'},{id:'c',text:'Membuat bentuk makin rumit'},{id:'d',text:'Mengganti objek dengan warna'}], correct:['a'], explanation:FACTS.sederhana},
+  {type:'symmetry', prompt:'Lengkapi sisi kanan agar simetris:', rows:2, cols:2, leftPattern:[[1,0],[1,1]], explanation:FACTS.simetri},
+  {type:'mcq', prompt:'Manakah pernyataan tentang warna yang paling tepat?', options:[{id:'a',text:'Makna warna bisa berbeda tergantung budaya, daerah, dan konteks'},{id:'b',text:'Semua warna punya makna sama di semua tempat'},{id:'c',text:'Warna tidak berpengaruh pada motif'},{id:'d',text:'Warna hanya boleh satu jenis'}], correct:['a'], explanation:FACTS.warna},
+  {type:'order', prompt:'Susun langkah merancang motif dari awal:', items:[{id:'insp',label:'🔍 Inspirasi'},{id:'amat',label:'👁️ Amati Bentuk'},{id:'sedh',label:'✏️ Sederhanakan'},{id:'warn',label:'🎨 Tentukan Warna'}], correctOrder:['insp','amat','sedh','warn'], explanation:FACTS.langkah},
+  {type:'mcq', prompt:'Apa saja yang termasuk teknik membuat motif?', options:[{id:'a',text:'Menggambar manual, pola berulang, simetri, menggabungkan bentuk, dan mewarnai'},{id:'b',text:'Hanya menggambar'},{id:'c',text:'Hanya mewarnai'},{id:'d',text:'Membeli motif jadi'}], correct:['a'], explanation:FACTS.teknik},
+  {type:'mcq', prompt:'Mengapa kita perlu menghargai budaya saat merancang motif Dayak?', options:[{id:'a',text:'Karena motif Dayak adalah bagian dari kekayaan budaya yang perlu dihargai'},{id:'b',text:'Karena motif tidak penting'},{id:'c',text:'Karena budaya boleh ditiru sembarangan'},{id:'d',text:'Karena tidak ada aturan sama sekali'}], correct:['a'], explanation:FACTS.budaya}
+];
+
+const ACHIEVEMENTS={
+  penjelajah:{name:'Penjelajah Alam', desc:'Menemukan semua inspirasi alam', icon:'🏆'},
+  ahlipola:{name:'Ahli Pola', desc:'Menyelesaikan semua puzzle pola', icon:'🏆'},
+  mastersimetri:{name:'Master Simetri', desc:'Menyelesaikan tantangan simetri', icon:'🏆'},
+  pewarna:{name:'Pewarna Kreatif', desc:'Menyelesaikan tantangan warna', icon:'🏆'},
+  ahliteknik:{name:'Ahli Teknik', desc:'Menyelesaikan semua mini game teknik', icon:'🏆'},
+  penjagabudaya:{name:'Penjaga Budaya', desc:'Menyelesaikan tantangan tentang menghargai budaya', icon:'🏆'},
+  mastermotif:{name:'Master Motif', desc:'Menyelesaikan seluruh permainan', icon:'🏆'}
+};
+
+/* ====================== RENDER ENGINE ====================== */
+const app=document.getElementById('app');
+const topbar=document.getElementById('topbar');
+
+function renderTopbar(){
+  if(state.screen==='start'){ topbar.innerHTML=''; topbar.style.display='none'; return; }
+  topbar.style.display='flex';
+  topbar.innerHTML=`
+    <div class="chip">⭐ <span>${state.score}</span></div>
+    <div class="chip">🪙 <span>${state.coins}</span></div>
+    <div class="chip">💡 <span>${state.hints}</span></div>
+    <div class="spacer"></div>
+    <button class="iconbtn" onclick="goMap()" title="Peta">🗺️</button>
+    <button class="iconbtn" onclick="toggleMute()" title="Suara">${state.muted?'🔇':'🔊'}</button>
+    <button class="iconbtn" onclick="saveGame()" title="Simpan">💾</button>
+  `;
+}
+function toggleMute(){ state.muted=!state.muted; renderTopbar(); }
+
+function render(){
+  renderTopbar();
+  if(state.screen==='start') return renderStart();
+  if(state.screen==='map') return renderMap();
+  if(state.screen==='level') return renderLevel();
+  if(state.screen==='boss') return renderBoss();
+  if(state.screen==='final') return renderFinalProject();
+  if(state.screen==='victory') return renderVictory();
+  if(state.screen==='gameover') return renderGameOver();
+  if(state.screen==='achievements') return renderAchievements();
+}
+
+/* ---------- START ---------- */
+function renderStart(){
+  app.innerHTML=`
+  <div class="startscreen">
+    <div class="bigemoji floaty">🗿</div>
+    <h1>MISI DESAINER<br>MOTIF DAYAK MUDA</h1>
+    <div class="sub">Jelajahi 8 wilayah, kalahkan Penjaga Motif, dan ciptakan motif Dayak sederhana karyamu sendiri!</div>
+    <button class="btn gold wide" style="max-width:320px" onclick="startNewGame()">▶️ Mulai Petualangan</button>
+    <div style="height:10px"></div>
+    <button class="btn ghost wide" style="max-width:320px;background:rgba(255,255,255,0.08);color:#fff;border-color:var(--gold-500)" onclick="loadGame().then(()=>{state.screen='map';render();})">📂 Lanjutkan Progres</button>
+    <div class="footer-note">Gunakan mouse, keyboard (Tab + Enter), atau layar sentuh untuk bermain.</div>
+  </div>`;
+}
+function startNewGame(){
+  state.score=0;state.coins=0;state.hints=3;state.unlocked=1;state.achievements=new Set();
+  state.levelDone={};state.inventory=[];state.lives=3;
+  state.screen='map'; sfxUnlock(); render();
+}
+
+/* ---------- MAP ---------- */
+function goMap(){ state.screen='map'; render(); }
+function renderMap(){
+  let html=`<div class="card"><div class="npc"><div class="avatar">🗺️</div><div class="bubble">Pilih wilayah petualanganmu. Selesaikan tiap wilayah secara berurutan untuk membuka wilayah berikutnya!</div></div></div>`;
+  html+=`<div class="mapwrap"><div class="mappath">`;
+  LEVELS.forEach((lv,i)=>{
+    const unlocked = (i+1)<=state.unlocked;
+    const done = !!state.levelDone[lv.id];
+    html+=`<div class="mapnode ${unlocked?'':'locked'}" ${unlocked?`onclick="enterLevel(${i})"`:''} tabindex="${unlocked?0:-1}">
+      <div class="num">${done?'✅':lv.emoji}</div>
+      <div class="info"><div class="t">Level ${lv.id} — ${lv.title}</div><div class="s">${lv.theme}</div></div>
+      <div class="go">${unlocked?'▶️':'🔒'}</div>
+    </div>`;
+    if(i<LEVELS.length-1) html+=`<div class="mapline"></div>`;
+  });
+  const bossUnlocked = state.unlocked>LEVELS.length;
+  html+=`<div class="mapline"></div>
+    <div class="mapnode ${bossUnlocked?'':'locked'}" ${bossUnlocked?'onclick="enterBoss()"':''}>
+      <div class="num">👹</div><div class="info"><div class="t">Final Boss — Penjaga Motif</div><div class="s">Uji semua kemampuanmu!</div></div>
+      <div class="go">${bossUnlocked?'⚔️':'🔒'}</div>
+    </div>`;
+  const projectUnlocked = !!state.bossDefeated;
+  html+=`<div class="mapline"></div>
+    <div class="mapnode ${projectUnlocked?'':'locked'}" ${projectUnlocked?"onclick=\"state.screen='final';render()\"":''}>
+      <div class="num">🎨</div><div class="info"><div class="t">Mode Kreatif — Desain Motifku</div><div class="s">Ciptakan motifmu sendiri</div></div>
+      <div class="go">${projectUnlocked?'▶️':'🔒'}</div>
+    </div>`;
+  html+=`</div></div>`;
+  html+=`<div style="text-align:center;margin-top:12px"><button class="btn ghost" style="background:rgba(255,255,255,.08);color:#fff;border-color:var(--gold-500)" onclick="state.screen='achievements';render()">🏆 Lihat Achievement (${state.achievements.size}/7)</button></div>`;
+  app.innerHTML=html;
+}
+function enterLevel(i){
+  state.levelIndex=i; state.stepIndex=0; state.screen='level'; state.tempSel=[]; state.tempOrder=[]; state.attemptWrong=false;
+  state.wfLetters=null; state.wfAnswer=[]; state.wfUsed=new Set();
+  sfxClick(); render();
+}
+
+/* ---------- ACHIEVEMENTS ---------- */
+function unlockAchievement(key){
+  if(state.achievements.has(key)) return;
+  state.achievements.add(key);
+  const a=ACHIEVEMENTS[key];
+  toast(`🏆 Achievement: ${a.name}!`); sfxUnlock();
+}
+function renderAchievements(){
+  let html=`<div class="card"><h2>🏆 Achievement</h2>`;
+  html+=`<div class="grid cols2">`;
+  Object.keys(ACHIEVEMENTS).forEach(k=>{
+    const got=state.achievements.has(k); const a=ACHIEVEMENTS[k];
+    html+=`<div class="tile" style="${got?'':'opacity:.4'}"><div>${a.icon}</div><div class="lbl">${a.name}</div></div>`;
+  });
+  html+=`</div><div style="margin-top:14px"><button class="btn" onclick="goMap()">⬅️ Kembali ke Peta</button></div></div>`;
+  app.innerHTML=html;
+}
+
+/* ---------- LEVEL ENGINE ---------- */
+function currentLevel(){ return LEVELS[state.levelIndex]; }
+function currentStep(){ return currentLevel().steps[state.stepIndex]; }
+
+function renderLevel(){
+  const lv=currentLevel(); const step=currentStep();
+  const total=lv.steps.length;
+  let html=`<div class="card">
+    <div style="font-size:13px;font-weight:800;color:var(--clay-600);margin-bottom:4px">${lv.emoji} LEVEL ${lv.id} — ${lv.title.toUpperCase()}</div>
+    <div class="progress-track" style="background:#e6dcbb"><div class="progress-fill" style="background:var(--clay-600);width:${Math.round((state.stepIndex)/total*100)}%"></div></div>`;
+  if(state.stepIndex===0){
+    html+=`<div class="npc"><div class="avatar">${lv.npc}</div><div class="bubble"><b>${lv.npcName}:</b> ${lv.intro}</div></div>`;
+  }
+  html+=`<div id="stepZone"></div></div>`;
+  app.innerHTML=html;
+  renderStep(step);
+}
+
+function stepZone(){ return document.getElementById('stepZone'); }
+
+function feedbackHTML(ok, text, hint, wrongCount){
+  if(ok) return `<div class="feedback ok">✨ BENAR! <div style="font-weight:600;margin-top:4px">${text}</div></div>`;
+  return `<div class="feedback bad">❌ BELUM TEPAT <div style="font-weight:600;margin-top:4px">${wrongCount>=2 && hint? 'Petunjuk: '+hint : 'Coba lagi ya!'}</div></div>`;
+}
+
+function nextStepBtn(){
+  return `<div style="margin-top:14px"><button class="btn gold wide" onclick="advanceStep()">Lanjut ➡️</button></div>`;
+}
+
+function registerResult(correct){
+  if(correct){ state.score+=10; state.coins+=2; state.sessionStats.correct++; sfxCorrect(); }
+  else { state.sessionStats.wrong++; sfxWrong();
+    if(state.lives>0){ /* lives only matter in boss; in levels we just track wrong attempts */ }
+  }
+}
+
+function useHint(){
+  if(state.hints<=0){ toast('Hint habis!'); return; }
+  state.hints--; renderTopbar();
+  const step=currentStep();
+  toast('💡 '+(step.hint||'Perhatikan kembali materi yang sudah dipelajari.'));
+}
+
+/* -- step renderer dispatch -- */
+function renderStep(step){
+  if(step.type==='narrative') return renderNarrative(step);
+  if(step.type==='select-multi') return renderSelectMulti(step);
+  if(step.type==='mcq') return renderMCQ(step);
+  if(step.type==='truefalse') return renderTrueFalse(step);
+  if(step.type==='order') return renderOrder(step);
+  if(step.type==='pattern') return renderPattern(step);
+  if(step.type==='build') return renderBuild(step);
+  if(step.type==='symmetry') return renderSymmetry(step);
+  if(step.type==='colorfill') return renderColorFill(step);
+  if(step.type==='reasoning') return renderReasoning(step);
+  if(step.type==='wordfind') return renderWordFind(step);
+}
+
+/* WORD FIND (temukan kata dari kotak huruf) */
+function shuffleArr(arr){ return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+function buildWFLetters(word){
+  const target=word.split('');
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const decoysCount=Math.max(4,10-target.length);
+  const decoys=[];
+  for(let i=0;i<decoysCount;i++){ decoys.push(alphabet[Math.floor(Math.random()*alphabet.length)]); }
+  return shuffleArr([...target,...decoys]);
+}
+function renderWordFind(step){
+  if(!state.wfLetters){ state.wfLetters=buildWFLetters(step.word); state.wfAnswer=[]; state.wfUsed=new Set(); }
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p>
+  <div class="card" style="background:#fff;padding:10px 14px;margin-bottom:10px"><i>${step.clue}</i></div>
+  <div class="canvas-wrap" id="wfAnswerBar" style="min-height:56px;font-size:26px;letter-spacing:6px;font-weight:800"></div>
+  <div class="grid cols4" id="wfGrid" style="margin-top:10px">`;
+  state.wfLetters.forEach((ch,i)=>{
+    const used=state.wfUsed.has(i);
+    html+=`<div class="tile ${used?'locked':''}" data-i="${i}" style="font-size:22px" onclick="wfTap(${i})" tabindex="0" onkeydown="if(event.key==='Enter')wfTap(${i})">${ch}</div>`;
+  });
+  html+=`</div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn ghost" style="background:#fff" onclick="wfReset()">🔁 Ulangi</button>
+    <button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button>
+  </div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+  wfUpdateBar();
+}
+function wfUpdateBar(){
+  const step=currentStep();
+  const bar=document.getElementById('wfAnswerBar');
+  if(!bar) return;
+  const chars=state.wfAnswer.map(a=>a.ch);
+  while(chars.length<step.word.length) chars.push('_');
+  bar.textContent=chars.join(' ');
+}
+function wfTap(i){
+  const step=currentStep();
+  if(state.wfUsed.has(i)) return;
+  if(state.wfAnswer.length>=step.word.length) return;
+  const ch=state.wfLetters[i];
+  state.wfAnswer.push({ch:ch,i:i});
+  state.wfUsed.add(i);
+  const tile=document.querySelector(`#wfGrid .tile[data-i="${i}"]`);
+  if(tile) tile.classList.add('locked');
+  sfxClick();
+  wfUpdateBar();
+  if(state.wfAnswer.length===step.word.length){ submitWordFind(); }
+}
+function wfReset(){
+  state.wfAnswer=[]; state.wfUsed=new Set();
+  renderWordFind(currentStep());
+}
+function submitWordFind(){
+  const step=currentStep();
+  const guess=state.wfAnswer.map(a=>a.ch).join('');
+  const ok = guess===step.word;
+  registerResult(ok);
+  if(ok){
+    document.getElementById('fbZone').innerHTML=feedbackHTML(true, step.explanation, '', 0)+nextStepBtn();
+  } else {
+    const bar=document.getElementById('wfAnswerBar');
+    if(bar){ bar.classList.add('wrong'); setTimeout(()=>{ if(bar) bar.classList.remove('wrong'); },400); }
+    document.getElementById('fbZone').innerHTML=feedbackHTML(false, step.explanation, step.hint, state.attemptWrong?2:1)+`<div style="margin-top:10px"><button class="btn clay" onclick="wfReset()">🔁 Coba Lagi</button></div>`;
+    state.attemptWrong=true;
+  }
+}
+
+function renderNarrative(step){
+  stepZone().innerHTML=`<div class="npc"><div class="avatar">💬</div><div class="bubble">${step.text}</div></div>${nextStepBtn()}`;
+}
+
+/* SELECT MULTI */
+function renderSelectMulti(step){
+  state.tempSel=state.tempSel||[];
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p><div class="grid cols3" id="tileGrid">`;
+  step.options.forEach(o=>{
+    html+=`<div class="tile" data-id="${o.id}" onclick="toggleTile('${o.id}')" tabindex="0" onkeydown="if(event.key==='Enter')toggleTile('${o.id}')">${o.label}</div>`;
+  });
+  html+=`</div>
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" onclick="submitSelectMulti()">✅ Konfirmasi Pilihan</button>
+    <button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button>
+  </div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function toggleTile(id){
+  const el=document.querySelector(`.tile[data-id="${id}"]`);
+  if(el.classList.contains('correct')||el.classList.contains('wrong')) return;
+  const idx=state.tempSel.indexOf(id);
+  if(idx>=0){ state.tempSel.splice(idx,1); el.classList.remove('selected'); }
+  else { state.tempSel.push(id); el.classList.add('selected'); }
+  sfxClick();
+}
+function submitSelectMulti(){
+  const step=currentStep();
+  const correctIds=step.options.filter(o=>o.correct).map(o=>o.id);
+  const wrongIds=step.options.filter(o=>!o.correct).map(o=>o.id);
+  const gotAllCorrect=correctIds.every(id=>state.tempSel.includes(id));
+  const gotNoWrong=state.tempSel.every(id=>!wrongIds.includes(id));
+  const perfect=gotAllCorrect && gotNoWrong;
+  if(perfect){
+    step.options.forEach(o=>{
+      const el=document.querySelector(`.tile[data-id="${o.id}"]`);
+      if(el) el.classList.add('correct');
+    });
+  } else {
+    state.tempSel.forEach(id=>{
+      if(wrongIds.includes(id)){
+        const el=document.querySelector(`.tile[data-id="${id}"]`);
+        if(el) el.classList.add('wrong');
+      }
+    });
+  }
+  registerResult(perfect);
+  if(perfect && step.achieveOnPerfect) unlockAchievement(step.achieveOnPerfect);
+  document.getElementById('fbZone').innerHTML=feedbackHTML(perfect, step.explanation, step.hint, state.attemptWrong?2:1)+ (perfect?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="retrySelectMulti()">🔁 Coba Lagi</button></div>`);
+  if(!perfect) state.attemptWrong=true;
+}
+function retrySelectMulti(){ state.tempSel=[]; renderSelectMulti(currentStep()); }
+
+/* MCQ (single or multi) */
+function renderMCQ(step){
+  state.tempSel=state.tempSel||[];
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p><div id="optZone">`;
+  step.options.forEach(o=>{
+    html+=`<button class="opt" data-id="${o.id}" onclick="toggleOpt('${o.id}',${!!step.multi})" tabindex="0">${o.text}</button>`;
+  });
+  html+=`</div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" onclick="submitMCQ()">✅ Jawab</button>
+    <button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button>
+  </div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function toggleOpt(id,multi){
+  if(!multi){ state.tempSel=[id]; document.querySelectorAll('.opt').forEach(el=>el.classList.remove('selected'));
+    document.querySelector(`.opt[data-id="${id}"]`).classList.add('selected'); }
+  else{
+    const el=document.querySelector(`.opt[data-id="${id}"]`);
+    const idx=state.tempSel.indexOf(id);
+    if(idx>=0){state.tempSel.splice(idx,1);el.classList.remove('selected');}
+    else{state.tempSel.push(id);el.classList.add('selected');}
+  }
+  sfxClick();
+}
+function submitMCQ(){
+  const step=currentStep();
+  if(state.tempSel.length===0){ toast('Pilih jawaban dulu ya!'); return; }
+  let ok;
+  if(step.anyCorrect) ok = state.tempSel.some(id=>step.correct.includes(id));
+  else if(step.multi) ok = step.correct.length===state.tempSel.length && step.correct.every(c=>state.tempSel.includes(c));
+  else ok = step.correct.includes(state.tempSel[0]);
+  if(ok){
+    document.querySelectorAll('.opt').forEach(el=>{
+      const id=el.getAttribute('data-id');
+      if(step.correct.includes(id)) el.classList.add('correct');
+    });
+  } else {
+    document.querySelectorAll('.opt').forEach(el=>{
+      const id=el.getAttribute('data-id');
+      if(state.tempSel.includes(id)) el.classList.add('wrong');
+    });
+  }
+  registerResult(ok);
+  if(ok && step.saveTo){ if(!state.finalProject) state.finalProject={}; state.finalProject[step.saveTo]=step.options.find(o=>state.tempSel.includes(o.id)).text; }
+  document.getElementById('fbZone').innerHTML=feedbackHTML(ok, step.explanation, step.hint, state.attemptWrong?2:1)+ (ok?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="retryMCQ()">🔁 Coba Lagi</button></div>`);
+  if(!ok) state.attemptWrong=true;
+}
+function retryMCQ(){ state.tempSel=[]; renderMCQ(currentStep()); }
+
+/* TRUE/FALSE */
+function renderTrueFalse(step){
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p>
+  <div style="display:flex;gap:10px">
+    <button class="btn gold" style="flex:1" onclick="answerTF(true)">✅ Benar</button>
+    <button class="btn clay" style="flex:1" onclick="answerTF(false)">❌ Salah</button>
+  </div>
+  <div style="margin-top:10px"><button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button></div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function answerTF(val){
+  const step=currentStep(); const ok = val===step.answer;
+  registerResult(ok);
+  document.getElementById('fbZone').innerHTML=feedbackHTML(ok, step.explanation, step.hint, state.attemptWrong?2:1)+ (ok?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="renderTrueFalse(currentStep())">🔁 Coba Lagi</button></div>`);
+  if(!ok) state.attemptWrong=true;
+}
+
+/* ORDER (klik berurutan) */
+function renderOrder(step){
+  state.tempOrder=[];
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p><div class="grid cols2" id="orderGrid">`;
+  step.items.forEach(it=>{
+    html+=`<div class="tile" style="font-size:16px" data-id="${it.id}" onclick="tapOrder('${it.id}')" tabindex="0">${it.label}</div>`;
+  });
+  html+=`</div><div style="margin-top:8px;font-weight:700" id="orderProgress">Urutan pilihanmu: —</div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn ghost" style="background:#fff" onclick="state.tempOrder=[];renderOrder(currentStep())">🔁 Ulangi</button>
+    <button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button>
+  </div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function tapOrder(id){
+  if(state.tempOrder.includes(id)) return;
+  state.tempOrder.push(id);
+  const el=document.querySelector(`.tile[data-id="${id}"]`);
+  el.classList.add('selected');
+  el.innerHTML+=`<div class="lbl">#${state.tempOrder.length}</div>`;
+  sfxClick();
+  const step=currentStep();
+  document.getElementById('orderProgress').textContent='Urutan pilihanmu: '+state.tempOrder.map((id,i)=>i+1).join(' → ');
+  if(state.tempOrder.length===step.items.length){
+    const ok = step.correctOrder.every((v,i)=>v===state.tempOrder[i]);
+    registerResult(ok);
+    document.querySelectorAll('#orderGrid .tile').forEach(t=>t.classList.add(ok?'correct':'wrong'));
+    document.getElementById('fbZone').innerHTML=feedbackHTML(ok, step.explanation, step.hint, state.attemptWrong?2:1)+ (ok?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="state.tempOrder=[];renderOrder(currentStep())">🔁 Coba Lagi</button></div>`);
+    if(!ok) state.attemptWrong=true;
+  }
+}
+
+/* PATTERN (lengkapi pola) */
+function renderPattern(step){
+  let seqHtml=step.sequence.map(s=>`<span>${s}</span>`).join(' ');
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p>
+  <div class="canvas-wrap">${seqHtml}</div>
+  <div class="grid cols3" style="margin-top:10px">`;
+  step.options.forEach(o=>{
+    html+=`<div class="tile" onclick="answerPattern('${o}',this)" tabindex="0">${o}</div>`;
+  });
+  html+=`</div><div style="margin-top:10px"><button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button></div><div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function answerPattern(val,el){
+  const step=currentStep(); const ok = val===step.correct;
+  document.querySelectorAll('#stepZone .tile').forEach(t=>t.classList.add('locked'));
+  el.classList.remove('locked'); el.classList.add(ok?'correct':'wrong');
+  registerResult(ok);
+  if(ok) unlockAchievement('ahlipola');
+  document.getElementById('fbZone').innerHTML=feedbackHTML(ok, step.explanation, step.hint, state.attemptWrong?2:1)+ (ok?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="renderPattern(currentStep())">🔁 Coba Lagi</button></div>`);
+  if(!ok) state.attemptWrong=true;
+}
+
+/* BUILD (susun pola dari palette) */
+function renderBuild(step){
+  state.tempOrder=[];
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p>
+  <div class="canvas-wrap" id="buildSlots">${Array(step.slotCount).fill('▢').map(()=>`<span>▢</span>`).join(' ')}</div>
+  <div class="grid cols3" style="margin-top:10px">`;
+  step.palette.forEach(p=>{
+    html+=`<div class="tile" onclick="tapBuild('${p.id}','${p.label}')" tabindex="0">${p.label}</div>`;
+  });
+  html+=`</div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn ghost" style="background:#fff" onclick="state.tempOrder=[];renderBuild(currentStep())">🔁 Ulangi</button>
+    <button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button>
+  </div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function tapBuild(id,label){
+  const step=currentStep();
+  if(state.tempOrder.length>=step.slotCount) return;
+  state.tempOrder.push(id);
+  sfxClick();
+  const slots=state.tempOrder.map(i=>step.palette.find(p=>p.id===i).label);
+  while(slots.length<step.slotCount) slots.push('▢');
+  document.getElementById('buildSlots').innerHTML=slots.map(s=>`<span>${s}</span>`).join(' ');
+  if(state.tempOrder.length===step.slotCount){
+    let ok=true;
+    if(step.patternRule==='ABAB'){
+      const a=state.tempOrder[0], b=state.tempOrder[1];
+      ok = a!==b && state.tempOrder[0]===a && state.tempOrder[1]===b && state.tempOrder[2]===a && state.tempOrder[3]===b;
+    } else if(step.patternRule==='AAAA'){
+      ok = state.tempOrder.every(x=>x===state.tempOrder[0]);
+    }
+    registerResult(ok);
+    document.getElementById('fbZone').innerHTML=feedbackHTML(ok, step.explanation, step.hint, state.attemptWrong?2:1)+ (ok?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="state.tempOrder=[];renderBuild(currentStep())">🔁 Coba Lagi</button></div>`);
+    if(!ok) state.attemptWrong=true; else sfxCorrect();
+  }
+}
+
+/* SYMMETRY */
+function renderSymmetry(step){
+  state.tempSel=[];
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p><div id="symGrid">`;
+  for(let r=0;r<step.rows;r++){
+    html+=`<div class="symrow">`;
+    for(let c=0;c<step.cols;c++){
+      const filled=step.leftPattern[r][c]===1;
+      html+=`<div class="symcell ${filled?'filled':''}">${filled?'🍃':''}</div>`;
+    }
+    html+=`<div class="symmid"></div>`;
+    for(let c=0;c<step.cols;c++){
+      html+=`<div class="symcell" data-r="${r}" data-c="${c}" onclick="toggleSym(${r},${c},this)" tabindex="0"></div>`;
+    }
+    html+=`</div>`;
+  }
+  html+=`</div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" onclick="submitSymmetry()">✅ Periksa Simetri</button>
+    <button class="btn ghost" style="background:#fff" onclick="useHint()">💡 Hint</button>
+  </div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function toggleSym(r,c,el){
+  const key=r+'_'+c;
+  const idx=state.tempSel.indexOf(key);
+  if(idx>=0){ state.tempSel.splice(idx,1); el.classList.remove('filled'); el.textContent=''; }
+  else { state.tempSel.push(key); el.classList.add('filled'); el.textContent='🍃'; }
+  sfxClick();
+}
+function submitSymmetry(){
+  const step=currentStep();
+  let ok=true;
+  for(let r=0;r<step.rows;r++){
+    for(let c=0;c<step.cols;c++){
+      const shouldFill = step.leftPattern[r][c]===1;
+      const isFilled = state.tempSel.includes(r+'_'+c);
+      if(shouldFill!==isFilled) ok=false;
+    }
+  }
+  registerResult(ok);
+  if(ok) unlockAchievement('mastersimetri');
+  document.getElementById('fbZone').innerHTML=feedbackHTML(ok, step.explanation, step.hint, state.attemptWrong?2:1)+ (ok?nextStepBtn():`<div style="margin-top:10px"><button class="btn clay" onclick="renderSymmetry(currentStep())">🔁 Coba Lagi</button></div>`);
+  if(!ok) state.attemptWrong=true;
+}
+
+/* COLOR FILL */
+function renderColorFill(step){
+  state.tempSel=state.tempSel||{};
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p>`;
+  step.regions.forEach(rg=>{
+    html+=`<div style="margin-bottom:10px"><div style="font-weight:800;margin-bottom:6px">${rg.label}</div><div class="grid cols4" id="pal_${rg.id}">`;
+    step.palette.forEach(p=>{
+      html+=`<div class="tile" style="background:${p.color};color:${p.id==='putih'?'#333':'#fff'};font-size:13px" onclick="pickColor('${rg.id}','${p.id}','${p.label}')" tabindex="0">${p.label}</div>`;
+    });
+    html+=`</div></div>`;
+  });
+  html+=`<button class="btn" onclick="submitColorFill()">✅ Terapkan Warna</button><div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function pickColor(region,colorId,label){
+  state.tempSel[region]={id:colorId,label:label};
+  document.querySelectorAll(`#pal_${region} .tile`).forEach(t=>t.style.outline='none');
+  event.currentTarget.style.outline='4px solid var(--forest-900)';
+  sfxClick();
+}
+function submitColorFill(){
+  const step=currentStep();
+  const chosen=Object.keys(state.tempSel).length===step.regions.length;
+  if(!chosen){ toast('Pilih warna untuk setiap bagian dulu!'); return; }
+  const ids=Object.values(state.tempSel).map(v=>v.id);
+  const contrast = new Set(ids).size===ids.length;
+  registerResult(true);
+  unlockAchievement('pewarna');
+  const msg = contrast? step.explanation+" Kombinasi warnamu punya kontras yang baik!" : step.explanation+" Coba lain kali gunakan dua warna berbeda agar kontrasnya lebih terasa.";
+  document.getElementById('fbZone').innerHTML=feedbackHTML(true, msg, '', 0)+nextStepBtn();
+}
+
+/* REASONING (isian bebas) */
+function renderReasoning(step){
+  let html=`<p style="font-weight:800;font-size:16px">${step.prompt}</p>
+  <textarea class="reason" id="reasonInput" placeholder="Tulis jawabanmu di sini..."></textarea>
+  <div id="reasonErr" style="color:var(--clay-600);font-weight:700;font-size:13px;margin-top:4px"></div>
+  <div style="margin-top:10px"><button class="btn" onclick="submitReasoning()">✅ Simpan Jawaban</button></div>
+  <div id="fbZone"></div>`;
+  stepZone().innerHTML=html;
+}
+function submitReasoning(){
+  const step=currentStep();
+  const val=document.getElementById('reasonInput').value.trim();
+  if(!val){ document.getElementById('reasonErr').textContent='Tulis dulu jawabanmu sebelum melanjutkan.'; return; }
+  document.getElementById('reasonErr').textContent='';
+  if(step.saveTo){ if(!state.finalProject) state.finalProject={}; state.finalProject[step.saveTo]=val; }
+  registerResult(true);
+  document.getElementById('fbZone').innerHTML=feedbackHTML(true, step.explanation, '', 0)+nextStepBtn();
+}
+
+/* ---------- ADVANCE / LEVEL COMPLETE ---------- */
+function advanceStep(){
+  const lv=currentLevel();
+  state.tempSel=[]; state.tempOrder=[]; state.attemptWrong=false;
+  state.wfLetters=null; state.wfAnswer=[]; state.wfUsed=new Set();
+  if(state.stepIndex< lv.steps.length-1){
+    state.stepIndex++;
+    render();
+  } else {
+    completeLevel();
+  }
+}
+function completeLevel(){
+  const lv=currentLevel();
+  state.levelDone[lv.id]=true;
+  state.inventory.push(lv.reward);
+  state.coins+=15; state.score+=30;
+  if(state.unlocked===lv.id) state.unlocked=lv.id+1;
+  if(lv.id===6) unlockAchievement('ahliteknik');
+  if(lv.id===7) unlockAchievement('penjagabudaya');
+  confetti(); sfxUnlock();
+  let html=`<div class="card" style="text-align:center">
+    <div style="font-size:56px" class="spin-in">${lv.reward.split(' ')[0]}</div>
+    <h2>Wilayah Selesai! 🎉</h2>
+    <p style="font-weight:700">Kamu mendapatkan <b>${lv.reward}</b></p>
+    <div class="badge">⭐ +30 Skor</div><div class="badge">🪙 +15 Koin</div>
+    ${state.unlocked<=LEVELS.length ? `<div style="margin-top:6px;font-weight:800;color:var(--clay-600)">Level ${state.unlocked} telah terbuka! 🔓</div>`:''}
+    <div style="margin-top:16px"><button class="btn gold wide" onclick="goMap()">🗺️ Kembali ke Peta</button></div>
+  </div>`;
+  app.innerHTML=html;
+}
+
+/* ====================== BOSS BATTLE ====================== */
+function enterBoss(){
+  state.screen='boss'; state.bossHP=5; state.playerHP=5;
+  state.bossQueue=[...BOSS_POOL].sort(()=>Math.random()-0.5).slice(0,8);
+  state.bossIdx=0; state.tempSel=[]; state.tempOrder=[];
+  render();
+}
+function renderBoss(){
+  if(state.bossHP<=0){ return bossVictory(); }
+  if(state.playerHP<=0){ return bossDefeatPlayer(); }
+  const q=state.bossQueue[state.bossIdx];
+  let html=`<div class="card dark">
+    <div style="text-align:center;font-size:54px" class="floaty">👹</div>
+    <h2 style="text-align:center;margin:4px 0">PENJAGA MOTIF</h2>
+    <div class="hp-row"><span class="who">👹 Boss</span><span class="hearts">${'❤️'.repeat(state.bossHP)}${'🖤'.repeat(5-state.bossHP)}</span></div>
+    <div class="hp-row"><span class="who">🧑 Kamu</span><span class="hearts">${'❤️'.repeat(state.playerHP)}${'🖤'.repeat(5-state.playerHP)}</span></div>
+    <div id="bossStepZone"></div>
+  </div>`;
+  app.innerHTML=html;
+  renderBossQuestion(q);
+}
+function renderBossQuestion(q){
+  const zone=document.getElementById('bossStepZone');
+  let html=`<p style="font-weight:800;font-size:16px;color:var(--white)">${q.prompt}</p>`;
+  if(q.type==='mcq'){
+    html+=`<div id="optZoneB">`;
+    q.options.forEach(o=>{ html+=`<button class="opt" data-id="${o.id}" onclick="bossPick('${o.id}')" tabindex="0">${o.text}</button>`; });
+    html+=`</div>`;
+  } else if(q.type==='pattern'){
+    html+=`<div class="canvas-wrap">${q.sequence.map(s=>`<span>${s}</span>`).join(' ')}</div><div class="grid cols3" style="margin-top:10px">`;
+    q.options.forEach(o=>{ html+=`<div class="tile" onclick="bossPick('${o}')" tabindex="0">${o}</div>`; });
+    html+=`</div>`;
+  } else if(q.type==='order'){
+    state.tempOrder=[];
+    html+=`<div class="grid cols2">`;
+    q.items.forEach(it=>{ html+=`<div class="tile" style="font-size:15px" data-id="${it.id}" onclick="bossOrderTap('${it.id}')" tabindex="0">${it.label}</div>`; });
+    html+=`</div><div id="bossOrderProg" style="margin-top:8px;color:#fff;font-weight:700">Urutan: —</div>`;
+  } else if(q.type==='symmetry'){
+    state.tempSel=[];
+    html+=`<div id="symGrid">`;
+    for(let r=0;r<q.rows;r++){
+      html+=`<div class="symrow">`;
+      for(let c=0;c<q.cols;c++){ const f=q.leftPattern[r][c]===1; html+=`<div class="symcell ${f?'filled':''}">${f?'🍃':''}</div>`; }
+      html+=`<div class="symmid"></div>`;
+      for(let c=0;c<q.cols;c++){ html+=`<div class="symcell" onclick="bossSymTap(${r},${c},this)" tabindex="0"></div>`; }
+      html+=`</div>`;
+    }
+    html+=`</div><button class="btn" style="margin-top:10px" onclick="bossCheckSym()">✅ Periksa</button>`;
+  }
+  html+=`<div id="fbZoneB"></div>`;
+  zone.innerHTML=html;
+}
+function bossResolve(ok){
+  const q=state.bossQueue[state.bossIdx];
+  if(ok){ state.bossHP--; state.score+=15; state.coins+=3; sfxCorrect(); }
+  else { state.playerHP--; sfxWrong(); }
+  document.getElementById('fbZoneB').innerHTML=feedbackHTML(ok,q.explanation,'',0)+`<div style="margin-top:10px"><button class="btn gold wide" onclick="bossNext()">Lanjut ➡️</button></div>`;
+}
+function bossPick(id){
+  const q=state.bossQueue[state.bossIdx];
+  document.querySelectorAll('#bossStepZone .opt, #bossStepZone .tile').forEach(el=>el.classList.add('locked'));
+  const ok = q.correct.includes(id);
+  bossResolve(ok);
+}
+function bossOrderTap(id){
+  const q=state.bossQueue[state.bossIdx];
+  if(state.tempOrder.includes(id)) return;
+  state.tempOrder.push(id);
+  document.querySelector(`#bossStepZone .tile[data-id="${id}"]`).classList.add('selected');
+  document.getElementById('bossOrderProg').textContent='Urutan: '+state.tempOrder.map((x,i)=>i+1).join(' → ');
+  if(state.tempOrder.length===q.items.length){
+    const ok=q.correctOrder.every((v,i)=>v===state.tempOrder[i]);
+    bossResolve(ok);
+  }
+}
+function bossSymTap(r,c,el){
+  const key=r+'_'+c; state.tempSel=state.tempSel||[];
+  const idx=state.tempSel.indexOf(key);
+  if(idx>=0){state.tempSel.splice(idx,1);el.classList.remove('filled');el.textContent='';}
+  else{state.tempSel.push(key);el.classList.add('filled');el.textContent='🍃';}
+}
+function bossCheckSym(){
+  const q=state.bossQueue[state.bossIdx];
+  let ok=true;
+  for(let r=0;r<q.rows;r++) for(let c=0;c<q.cols;c++){
+    const should=q.leftPattern[r][c]===1; const is=(state.tempSel||[]).includes(r+'_'+c);
+    if(should!==is) ok=false;
+  }
+  bossResolve(ok);
+}
+function bossNext(){
+  state.bossIdx++;
+  if(state.bossIdx>=state.bossQueue.length || state.bossHP<=0 || state.playerHP<=0){
+    render(); return;
+  }
+  render();
+}
+function bossVictory(){
+  state.bossDefeated=true;
+  if(state.unlocked===LEVELS.length+1) state.unlocked=LEVELS.length+2;
+  unlockAchievement('mastermotif');
+  confetti(); sfxWin();
+  app.innerHTML=`<div class="card" style="text-align:center">
+    <div style="font-size:60px" class="spin-in">🎉</div>
+    <h2>PETUALANGAN SELESAI!</h2>
+    <p style="font-weight:700">Kamu berhasil mengalahkan Penjaga Motif dan menjadi <b>Desainer Motif Dayak Muda</b>!</p>
+    <div class="badge">🏆 Gelar Desainer Motif Dayak Muda</div>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+      <button class="btn gold" onclick="state.screen='final';render()">🎨 Buka Mode Kreatif</button>
+      <button class="btn" onclick="goMap()">🗺️ Peta</button>
+    </div>
+  </div>`;
+}
+function bossDefeatPlayer(){
+  sfxLose();
+  app.innerHTML=`<div class="card" style="text-align:center">
+    <div style="font-size:56px">💔</div>
+    <h2>Belum Berhasil...</h2>
+    <p style="font-weight:700">Penjaga Motif masih terlalu kuat. Pelajari lagi materi di setiap level, lalu coba kembali!</p>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:center">
+      <button class="btn gold" onclick="enterBoss()">🔁 Coba Lagi</button>
+      <button class="btn" onclick="goMap()">🗺️ Peta</button>
+    </div>
+  </div>`;
+}
+
+/* ====================== FINAL PROJECT / CREATIVE MODE ====================== */
+const FP_STEPS=[
+  {key:'inspirasi', label:'Pilih Inspirasi', options:['🍃 Daun','🌿 Pakis','🦅 Burung Enggang','🐟 Ikan','〰️ Sulur']},
+  {key:'bentuk', label:'Buat Bentuk', options:['Lengkung','Bulat','Bercabang','Meliuk']},
+  {key:'sederhana', label:'Sederhanakan', options:['Sangat Sederhana','Sederhana dengan Detail Kecil']},
+  {key:'sulur', label:'Tambahkan Sulur/Bentuk Pendukung', options:['〰️ Sulur','🍃 Daun Kecil','Tanpa Tambahan']},
+  {key:'pola', label:'Buat Pola Berulang', options:['A-A-A-A','A-B-A-B','Perubahan Arah']},
+  {key:'simetri', label:'Atur Simetri', options:['Simetris Kiri-Kanan','Tidak Simetris (Bebas)']},
+  {key:'warna', label:'Warnai', options:['Merah & Hitam','Kuning & Hijau','Hitam & Putih','Hijau & Putih']},
+  {key:'judul', label:'Berikan Judul', isText:true},
+  {key:'makna', label:'Berikan Makna', isText:true}
+];
+function renderFinalProject(){
+  state.fpIndex = state.fpIndex||0;
+  state.finalProject = state.finalProject||{};
+  if(state.fpIndex>=FP_STEPS.length){ return renderFinalSummary(); }
+  const s=FP_STEPS[state.fpIndex];
+  let html=`<div class="card"><div style="font-weight:800;color:var(--clay-600);margin-bottom:6px">🎨 DESAIN MOTIFKU — Langkah ${state.fpIndex+1}/${FP_STEPS.length}</div>
+  <div class="progress-track" style="background:#e6dcbb"><div class="progress-fill" style="background:var(--clay-600);width:${Math.round(state.fpIndex/FP_STEPS.length*100)}%"></div></div>
+  <p style="font-weight:800;font-size:17px">${s.label}</p>`;
+  if(s.isText){
+    html+=`<textarea class="reason" id="fpText" placeholder="Tulis di sini..."></textarea>
+    <div id="fpErr" style="color:var(--clay-600);font-weight:700;font-size:13px;margin-top:4px"></div>
+    <button class="btn gold wide" style="margin-top:10px" onclick="fpSubmitText()">Lanjut ➡️</button>`;
+  } else {
+    html+=`<div class="grid cols2">`;
+    s.options.forEach(o=>{ html+=`<button class="opt" onclick="fpChoose('${o.replace(/'/g,"\\'")}')" tabindex="0">${o}</button>`; });
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+  app.innerHTML=html;
+}
+function fpChoose(val){
+  const s=FP_STEPS[state.fpIndex];
+  state.finalProject[s.key]=val;
+  state.fpIndex++; sfxClick(); render();
+}
+function fpSubmitText(){
+  const val=document.getElementById('fpText').value.trim();
+  if(!val){ document.getElementById('fpErr').textContent='Tulis dulu isiannya sebelum melanjutkan.'; return; }
+  const s=FP_STEPS[state.fpIndex];
+  state.finalProject[s.key]=val;
+  state.fpIndex++; render();
+}
+function renderFinalSummary(){
+  const fp=state.finalProject;
+  confetti(); sfxWin();
+  let html=`<div class="card motif-border" style="text-align:center">
+    <div style="font-size:50px">🖼️</div>
+    <h2>${fp.judul||'Motifku'}</h2>
+    <div class="canvas-wrap" style="font-size:34px">${(fp.inspirasi||'🍃').split(' ')[0]} ${(fp.sulur||'').split(' ')[0]||''} ${(fp.inspirasi||'🍃').split(' ')[0]} ${(fp.sulur||'').split(' ')[0]||''}</div>
+    <div style="text-align:left;margin-top:14px">
+      <div class="badge">Inspirasi: ${fp.inspirasi||'-'}</div>
+      <div class="badge">Bentuk: ${fp.bentuk||'-'}</div>
+      <div class="badge">Pendukung: ${fp.sulur||'-'}</div>
+      <div class="badge">Pola: ${fp.pola||'-'}</div>
+      <div class="badge">Simetri: ${fp.simetri||'-'}</div>
+      <div class="badge">Warna: ${fp.warna||'-'}</div>
+    </div>
+    <p style="margin-top:10px;font-style:italic">"${fp.makna||''}"</p>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn gold" onclick="state.fpIndex=0;state.finalProject={};render()">🔁 Buat Motif Baru</button>
+      <button class="btn" onclick="goMap()">🗺️ Peta</button>
+    </div>
+  </div>`;
+  app.innerHTML=html;
+}
+
+/* ====================== INIT ====================== */
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape' && state.screen!=='start' && state.screen!=='map') goMap();
+});
+render();
+</script>
+</body>
+</html>
